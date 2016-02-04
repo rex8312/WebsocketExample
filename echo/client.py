@@ -10,13 +10,13 @@ def incoming(ws):
         m = ws.receive()
         if m is not None:
             m = str(m)
-            print((m, len(m)))
+            print(m, len(m))
             if len(m) == 41:
                 ws.close()
                 break
         else:
             break
-    print(("Connection closed!",))
+    print("Connection closed!")
 
 
 def outgoing(ws):
