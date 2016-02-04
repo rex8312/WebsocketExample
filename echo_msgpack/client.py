@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 from gevent import monkey; monkey.patch_all()
 
-import json
+import msgpack
 import gevent
 from ws4py.client.geventclient import WebSocketClient
 
@@ -33,10 +33,10 @@ if __name__ == '__main__':
     ws.connect()
 
     for n in range(50):
-        msg = json.dumps(dict(msg="Hello world", no=n))
-        ws.send(msg)
+        msg = msgpack.dumps(dict(msg="Hello world", no=n))
+        ws.send(msg, binary=True)
         resp = str(ws.receive())
-        print json.loads(resp)
+        print msgpack.loads(resp)
     ws.close()
 
     # greenlets = [

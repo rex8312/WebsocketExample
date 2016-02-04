@@ -7,7 +7,7 @@ from bottle_websocket import websocket
 from bottle import get
 from bottle import run
 from bottle import template
-import json
+import msgpack
 
 
 @get('/')
@@ -20,8 +20,7 @@ def echo(ws):
     while True:
         msg = ws.receive()
         if msg is not None:
-            msg = msg.decode("utf-8")
-            print('recv: {}'.format(json.loads(msg)))
+            print('recv: {}'.format(msgpack.loads(msg)))
             ws.send(msg)
         else:
             break
