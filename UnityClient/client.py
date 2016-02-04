@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 from gevent import monkey; monkey.patch_all()
 
+import msgpack
 import gevent
 from ws4py.client.geventclient import WebSocketClient
 
@@ -30,14 +32,15 @@ if __name__ == '__main__':
     ws = WebSocketClient('ws://127.0.0.1:8080/websocket', protocols=['http-only', 'chat'])
     ws.connect()
 
-    ws.send("Hello world")
-    print(ws.receive())
+    for n in range(50):
+        msg = msgpack.dumps(dict(msg="Hello world", no=n))
+        ws.send(msg, binary=True)
+        resp = str(ws.receive())
+        print msgpack.loads(resp)
+    ws.close()
 
-    ws.send("Hello world again")
-    print(ws.receive())
-
-    greenlets = [
-        gevent.spawn(incoming, ws),
-        gevent.spawn(outgoing, ws),
-    ]
-    gevent.joinall(greenlets)
+    # greenlets = [
+        # gevent.spawn(incoming, ws),
+        # gevent.spawn(outgoing, ws),
+    # ]
+    # gevent.joinall(greenlets)
